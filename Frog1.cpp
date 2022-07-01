@@ -96,7 +96,19 @@ int main() {
     for(int i=0 ;i<n;i++){
         cin>>h[i];
     }
-    cout<<func(n-1)<<endl;
+    // cout<<func(n-1)<<endl;
+
+    int prev = 0;
+    int prev2 = 0;
+    for(int i= 1;i<n;i++){
+        int fs = prev + abs(h[i] - h[i-1]) ;
+        int ss = INT_MAX;
+        if(i>1) ss = prev2 + abs(h[i]- h[i-2]);
+        int curri = min(fs,ss);
+        prev2 = prev ;
+        prev = curri;
+    }
+    cout<<prev<<endl;
     return 0;
 }
 
