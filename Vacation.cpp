@@ -59,24 +59,24 @@ ll lcm(ll a, ll b) {return ((a * b) / (gcd(a, b)));}
 
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 int n;
-vector<vector<int>>activity(1e5+1,vector<int>(2,0));
-vector<vector<int>>dp(1e5+1,vector<int>(4,-1));
+vector<vector<int>>activity(1e5+1,vector<int>(3,0));
+// vector<vector<int>>dp(1e5+1,vector<int>(4,-1));
 
-int func(int day,int lastActivity){
-    if(day== 0 ){
-        int maxi= 0 ;
-        for(int i= 0 ;i<3;i++){
-            if(i!= lastActivity) maxi = max(maxi, activity[0][i]);
-        }
-        return dp[day][lastActivity]= maxi;
-    }
-    if(dp[day][lastActivity] != -1) return dp[day][lastActivity];
-    int maxi = 0 ;
-    for(int i= 0;i<3;i++){
-        if(i!= lastActivity) maxi = max(maxi , activity[day][i] + func(day-1,i));
-    }
-    return dp[day][lastActivity] = maxi;
-}
+// int func(int day,int lastActivity){
+//     if(day== 0 ){
+//         int maxi= 0 ;
+//         for(int i= 0 ;i<3;i++){
+//             if(i!= lastActivity) maxi = max(maxi, activity[0][i]);
+//         }
+//         return dp[day][lastActivity]= maxi;
+//     }
+//     if(dp[day][lastActivity] != -1) return dp[day][lastActivity];
+//     int maxi = 0 ;
+//     for(int i= 0;i<3;i++){
+//         if(i!= lastActivity) maxi = max(maxi , activity[day][i] + func(day-1,i));
+//     }
+//     return dp[day][lastActivity] = maxi;
+// }
 
 int main() {
 
@@ -96,7 +96,26 @@ int main() {
             activity[i][j] = x;
         }
     }
-    cout<<func(n-1,3)<<endl;
+    debug(activity)
+    // cout<<func(n-1,3)<<endl;
+    vector<int> prev(n+1,0);
+    prev[0] = max(activity[0][2],activity[0][1]);
+    prev[1] = max(activity[0][2],activity[0][0]);
+    prev[2] = max(activity[0][0],activity[0][1]);
+    prev[3] = max(activity[0][2],max(activity[0][0],activity[0][1]));
+    for(int day = 1;day<n;day++){
+        vector<int> temp(n+1,0);
+        for(int last = 0;last<4 ;last++){
+            temp[last] = 0;
+            for(int act = 0 ;act<3;act++){
+                if(act!= last){
+                    temp[last] = max(activity[day][act]+ prev[act], temp[last]);
+                }
+            }
+        }
+        prev = temp;
+    }
+    cout<<prev[n]<<endl;
     return 0;
 }
 
